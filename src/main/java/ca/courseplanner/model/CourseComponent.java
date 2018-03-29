@@ -40,6 +40,7 @@ public class CourseComponent {
     public boolean isEqual(String componentCode){
         return this.componentCode.equals(componentCode);
     }
+    //TODO: make sure to turn this into equals()
 
     /**
      * Returns the information about the courseComponent.

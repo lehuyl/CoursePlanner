@@ -1,6 +1,7 @@
 package ca.courseplanner.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Offering implementation which describes the properties of an offering of a course.
@@ -9,8 +10,8 @@ public class Offering {
     private int year;
     private int semester;
     private String location;
-    private ArrayList<String> instructorList = new ArrayList<>();
-    private ArrayList<CourseComponent> courseComponentList = new ArrayList<>();
+    private List<String> instructorList = new ArrayList<>();
+    private List<CourseComponent> courseComponentList = new ArrayList<>();
 
     /**
      * Constructor for the Offering.
@@ -30,13 +31,14 @@ public class Offering {
      * @param enrollmentNumber Must not be null. Int containing how many more students are enrolled in the course.
      * @param totalEnrollmentNumber Must not be null. Into containing how many more seats are available in the course.
      */
-    public void addCourseComponentInfo(String componentCode, int enrollmentNumber, int totalEnrollmentNumber, ArrayList<String> newInstructorList){
+    public void addCourseComponentInfo(String componentCode, int enrollmentNumber, int totalEnrollmentNumber, List<String> newInstructorList){
         instructorList.addAll(newInstructorList);
 
         for(CourseComponent currentCourseComponent : courseComponentList){
             if(currentCourseComponent.isEqual(componentCode)){
                 currentCourseComponent.addEnrollment(enrollmentNumber);
                 currentCourseComponent.addEnrollmentTotal(totalEnrollmentNumber);
+                return;
             }
         }
 
@@ -55,13 +57,14 @@ public class Offering {
     public boolean isEqual(int year, int semester, String location){
         return this.year == year && this.semester == semester && this.location.equals(location);
     }
+    //TODO: turn this to equals()?
 
     /**
      * Returns the information about the Offering.
      * @return String containing the information about the Offering.
      */
     public String getOfferingInfo(){
-        StringBuilder stringBuilder = new StringBuilder(year + semester + " in " + location + " by ");
+        StringBuilder stringBuilder = new StringBuilder("\t" + year + semester + " in " + location + " by ");
 
         for(String currentInstructor : instructorList){
             stringBuilder.append(currentInstructor);
@@ -72,7 +75,7 @@ public class Offering {
         stringBuilder.append("\n");
 
         for(CourseComponent currentCourseComponent : courseComponentList){
-            stringBuilder.append("\t");
+            stringBuilder.append("\t\t");
             stringBuilder.append(currentCourseComponent.getCourseComponentInfo());
             stringBuilder.append("\n");
         }
