@@ -30,7 +30,7 @@ public class CoursePlannerController
                 }
                 else
                 {
-                    String[] newLine = scanner.nextLine().split(",");
+                    String[] newLine = scanner.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
                     modelDumper.addNewRecord(newLine);
                 }

@@ -27,16 +27,6 @@ public class ModelDumper {
         year = Integer.parseInt(record[0].substring(0, 3));//TODO: error check
         semester = Integer.parseInt(record[0].substring(3));//TODO: error check
 
-        //my attempt to fix lol//TODO: erase this
-//        char[] yearSemArray = record[0].toCharArray();
-//        String yearString = new StringBuilder().append(yearSemArray[0]).append(yearSemArray[1]).append(yearSemArray[2]).toString();
-//        System.out.println(yearString);
-//        year = Integer.parseInt(yearString);
-//        System.out.println("fine");
-//        String semesterString = new StringBuilder().append(yearSemArray[3]).toString();
-//        semester = Integer.parseInt(semesterString);
-//        System.out.println("fine");
-
         //get the second element, use that for subject
         subject = record[1];
         catalogNumber = record[2];
@@ -46,7 +36,7 @@ public class ModelDumper {
 
         //for record[6] we will have to make sure that we separate these into comma separated then add those into the newInstructorList
         newInstructorList = Arrays.asList(record[6].split(","));//TODO: error check
-
+//        newInstructorList = Arrays.asList(record[6].split(",(?=([^\"]\"[^\"]\")[^\"]$)"));
         componentCode = record[7];
 
         for(Course currentCourse : courseList){
