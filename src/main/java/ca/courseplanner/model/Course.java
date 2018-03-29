@@ -109,4 +109,9 @@ public class Course {
     private void addNewOfferingListElement(int year, int semester, String location){
         offeringList.add(new Offering(year, semester, location));
     }
+
+    public List<Offering> getOfferingList()
+    {
+        return offeringList;
+    }
 }

@@ -1,7 +1,9 @@
 package ca.courseplanner.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Offering implementation which describes the properties of an offering of a course.
@@ -66,10 +68,15 @@ public class Offering {
     public String getOfferingInfo(){
         StringBuilder stringBuilder = new StringBuilder("\t" + year + semester + " in " + location + " by ");
 
+        Set<String> instructorDuplicateSet = new HashSet<>();
         for(String currentInstructor : instructorList){
-            stringBuilder.append(currentInstructor);
-            if(instructorList.indexOf(currentInstructor) != instructorList.size() - 1){
-                stringBuilder.append(", ");
+            if(!instructorDuplicateSet.contains(currentInstructor))
+            {
+                stringBuilder.append(currentInstructor);
+                if(instructorList.indexOf(currentInstructor) != instructorList.size() - 1){
+                    stringBuilder.append(", ");
+                }
+                instructorDuplicateSet.add(currentInstructor);
             }
         }
         stringBuilder.append("\n");
@@ -102,5 +109,15 @@ public class Offering {
      */
     private void addNewCourseComponentListElement(String componentCode){
         courseComponentList.add(new CourseComponent(componentCode));
+    }
+
+    public String getOfferingId()
+    {
+        return "" + year + semester;
+    }
+
+    public String getLocation()
+    {
+        return location;
     }
 }

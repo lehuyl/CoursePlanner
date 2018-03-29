@@ -1,8 +1,6 @@
 package ca.courseplanner.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * ModelDumper implementation which sorts information about all the courses.
@@ -38,7 +36,7 @@ public class ModelDumper {
 
         //for record[6] we will have to make sure that we separate these into comma separated then add those into the newInstructorList
         newInstructorList = Arrays.asList(record[6].split(","));//TODO: error check
-
+//        newInstructorList = Arrays.asList(record[6].split(",(?=([^\"]\"[^\"]\")[^\"]$)"));
         componentCode = record[7];
 
         for(Course currentCourse : courseList){
@@ -55,9 +53,50 @@ public class ModelDumper {
     }
 
     public void dumpToConsole(){
+        sortAlphabetical();
         for(Course currentCourse : courseList){
+            sortLocationAlphabetical(currentCourse);
+            sortNumericalYearSem(currentCourse);
+
             System.out.print(currentCourse.getCourseInfo());
         }
+    }
+
+    private void sortAlphabetical()
+    {
+        Collections.sort(courseList, new Comparator<Course>()
+        {
+            @Override
+            public int compare(Course o1, Course o2)
+            {
+//                return o1.getSubject().compareToIgnoreCase(o2.getSubject());
+                return (o1.getSubject() + " " + o1.getCatalogNumber()).compareTo(o2.getSubject() + " " + o2.getCatalogNumber());
+            }
+        });
+    }
+
+    private void sortNumericalYearSem(Course course)
+    {
+        Collections.sort(course.getOfferingList(), new Comparator<Offering>()
+        {
+            @Override
+            public int compare(Offering o1, Offering o2)
+            {
+                return o1.getOfferingId().compareTo(o2.getOfferingId());
+            }
+        });
+    }
+
+    private void sortLocationAlphabetical(Course course)
+    {
+        Collections.sort(course.getOfferingList(), new Comparator<Offering>()
+        {
+            @Override
+            public int compare(Offering o1, Offering o2)
+            {
+                return o1.getLocation().compareTo(o2.getLocation());
+            }
+        });
     }
 
     private void addNewCourseListElement(String subject, String catalogNumber){
