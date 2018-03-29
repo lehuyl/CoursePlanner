@@ -1,8 +1,6 @@
 package ca.courseplanner.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * ModelDumper implementation which sorts information about all the courses.
@@ -28,6 +26,16 @@ public class ModelDumper {
         //get the first element of the record, use the first three char for the year, turn that to int, last one is for semester, turn that to int
         year = Integer.parseInt(record[0].substring(0, 3));//TODO: error check
         semester = Integer.parseInt(record[0].substring(3));//TODO: error check
+
+        //my attempt to fix lol//TODO: erase this
+//        char[] yearSemArray = record[0].toCharArray();
+//        String yearString = new StringBuilder().append(yearSemArray[0]).append(yearSemArray[1]).append(yearSemArray[2]).toString();
+//        System.out.println(yearString);
+//        year = Integer.parseInt(yearString);
+//        System.out.println("fine");
+//        String semesterString = new StringBuilder().append(yearSemArray[3]).toString();
+//        semester = Integer.parseInt(semesterString);
+//        System.out.println("fine");
 
         //get the second element, use that for subject
         subject = record[1];
@@ -55,9 +63,50 @@ public class ModelDumper {
     }
 
     public void dumpToConsole(){
+        sortAlphabetical();
         for(Course currentCourse : courseList){
+            sortLocationAlphabetical(currentCourse);
+            sortNumericalYearSem(currentCourse);
+
             System.out.print(currentCourse.getCourseInfo());
         }
+    }
+
+    private void sortAlphabetical()
+    {
+        Collections.sort(courseList, new Comparator<Course>()
+        {
+            @Override
+            public int compare(Course o1, Course o2)
+            {
+//                return o1.getSubject().compareToIgnoreCase(o2.getSubject());
+                return (o1.getSubject() + " " + o1.getCatalogNumber()).compareTo(o2.getSubject() + " " + o2.getCatalogNumber());
+            }
+        });
+    }
+
+    private void sortNumericalYearSem(Course course)
+    {
+        Collections.sort(course.getOfferingList(), new Comparator<Offering>()
+        {
+            @Override
+            public int compare(Offering o1, Offering o2)
+            {
+                return o1.getOfferingId().compareTo(o2.getOfferingId());
+            }
+        });
+    }
+
+    private void sortLocationAlphabetical(Course course)
+    {
+        Collections.sort(course.getOfferingList(), new Comparator<Offering>()
+        {
+            @Override
+            public int compare(Offering o1, Offering o2)
+            {
+                return o1.getLocation().compareTo(o2.getLocation());
+            }
+        });
     }
 
     private void addNewCourseListElement(String subject, String catalogNumber){

@@ -103,4 +103,14 @@ public class Offering {
     private void addNewCourseComponentListElement(String componentCode){
         courseComponentList.add(new CourseComponent(componentCode));
     }
+
+    public String getOfferingId()
+    {
+        return "" + year + semester;
+    }
+
+    public String getLocation()
+    {
+        return location;
+    }
 }
