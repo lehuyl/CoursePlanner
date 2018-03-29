@@ -34,7 +34,19 @@ public class Offering {
      * @param totalEnrollmentNumber Must not be null. Into containing how many more seats are available in the course.
      */
     public void addCourseComponentInfo(String componentCode, int enrollmentNumber, int totalEnrollmentNumber, List<String> newInstructorList){
-        instructorList.addAll(newInstructorList);
+//        instructorList.addAll(newInstructorList);
+        for(String newInstructor : newInstructorList){
+            boolean isAlreadyAdded = false;
+            for(String instructor : instructorList){
+                if(instructor.equals(newInstructor)){
+                    isAlreadyAdded = true;
+                    break;
+                }
+            }
+            if(!isAlreadyAdded){
+                instructorList.add(newInstructor);
+            }
+        }
 
         for(CourseComponent currentCourseComponent : courseComponentList){
             if(currentCourseComponent.isEqual(componentCode)){
@@ -84,7 +96,7 @@ public class Offering {
         for(CourseComponent currentCourseComponent : courseComponentList){
             stringBuilder.append("\t\t");
             stringBuilder.append(currentCourseComponent.getCourseComponentInfo());
-            stringBuilder.append("\n");
+//            stringBuilder.append("\n");
         }
         return stringBuilder.toString();
     }
