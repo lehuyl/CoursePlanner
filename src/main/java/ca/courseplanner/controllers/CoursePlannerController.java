@@ -13,9 +13,9 @@ public class CoursePlannerController
     ModelDumper modelDumper = new ModelDumper();
 
     @GetMapping("/dump-model")
-    public void dumpModelInfo(){
+    public void dumpModelInfo(){//TODO: clean up later
         //get the scanner
-        File file = new File("./data/course_data_2018.csv");
+        File file = new File("./data/course_data_2016.csv");//TODO: change later to 2018 upon submission
         try(Scanner scanner = new Scanner(file)){
 //            while(scanner.hasNext()){
 //                System.out.println(scanner.nextLine() + " | ");
