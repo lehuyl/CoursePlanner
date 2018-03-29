@@ -35,6 +35,8 @@ public class ModelDumper {
         enrollmentNumber = Integer.parseInt(record[5]);
 
         //for record[6] we will have to make sure that we separate these into comma separated then add those into the newInstructorList
+        record[6] = record[6].replace("\"", "");
+        record[6] = record[6].replaceAll("\\s+","");
         newInstructorList = Arrays.asList(record[6].split(","));//TODO: error check
 //        newInstructorList = Arrays.asList(record[6].split(",(?=([^\"]\"[^\"]\")[^\"]$)"));
         componentCode = record[7];
