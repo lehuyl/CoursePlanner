@@ -15,7 +15,7 @@ public class CoursePlannerController
     @GetMapping("/dump-model")
     public void dumpModelInfo(){
         //get the scanner
-        File file = new File("./data/course_data_2016.csv");
+        File file = new File("./data/course_data_2018.csv");
         try(Scanner scanner = new Scanner(file)){
 //            while(scanner.hasNext()){
 //                System.out.println(scanner.nextLine() + " | ");
