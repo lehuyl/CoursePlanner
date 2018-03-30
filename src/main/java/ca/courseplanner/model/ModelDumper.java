@@ -42,7 +42,6 @@ public class ModelDumper {
         record[6] = record[6].replace("\"", "");
         record[6] = record[6].replace(", ", ",");
         newInstructorList = Arrays.asList(record[6].split(","));
-//        newInstructorList = Arrays.asList(record[6].split(",(?=([^\"]\"[^\"]\")[^\"]$)"));
         componentCode = record[7];
 
         for(Course currentCourse : courseList){
@@ -59,18 +58,6 @@ public class ModelDumper {
     }
 
     public void dumpToConsole(){
-        //Use this for the final version
-
-//        System.out.print("Model Dump from 'course_data_2016.csv' file\n\n");//TODO: this is currently hardcoded
-//        sortAlphabetical();
-//        for(Course currentCourse : courseList){
-////            sortLocationAlphabetical(currentCourse);
-////            sortNumericalYearSem(currentCourse);
-//
-//            System.out.print(currentCourse.getCourseInfo());
-//        }
-
-        //Use this while debugging
 
         File logFile = new File("./data/output_dump.txt");
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(logFile))) {
@@ -79,9 +66,6 @@ public class ModelDumper {
 
             sortAlphabetical();
             for(Course currentCourse : courseList){
-//                sortLocationAlphabetical(currentCourse);
-//                sortNumericalYearSem(currentCourse);
-
                 System.out.print(currentCourse.getCourseInfo());
                 writer.write(currentCourse.getCourseInfo());
             }
@@ -107,24 +91,4 @@ public class ModelDumper {
             }
         });
     }
-
-//    private void sortNumericalYearSem(Course course){
-//        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
-//            @Override
-//            public int compare(Offering o1, Offering o2)
-//            {
-//                return o1.getOfferingId().compareTo(o2.getOfferingId());
-//            }
-//        });
-//    }
-//
-//    private void sortLocationAlphabetical(Course course){
-//        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
-//            @Override
-//            public int compare(Offering o1, Offering o2)
-//            {
-//                return o1.getLocation().compareTo(o2.getLocation());
-//            }
-//        });
-//    }
 }

@@ -15,15 +15,12 @@ public class CoursePlannerController
     @GetMapping("/dump-model")
     public void dumpModelInfo(){//TODO: clean up later
         //get the scanner
-        File file = new File("./data/course_data_2016.csv");//TODO: change later to 2018 upon submission
+        File file = new File("./data/course_data_2018.csv");//TODO: change later to 2018 upon submission
         try(Scanner scanner = new Scanner(file)){
-//            while(scanner.hasNext()){
-//                System.out.println(scanner.nextLine() + " | ");
-//            }
+
             int lineNumber = 1;
             while(scanner.hasNextLine())
             {
-//                System.out.println(scanner.nextLine());
                 if(lineNumber == 1)
                 {
                     scanner.nextLine();
@@ -42,10 +39,6 @@ public class CoursePlannerController
         }catch(Exception e){
             System.out.println("something bad happened");//TODO: fix this later
         }
-
-        //add the stuff
-
-        //when youre done, go ahead and dump the stuff
     }
 
 }
