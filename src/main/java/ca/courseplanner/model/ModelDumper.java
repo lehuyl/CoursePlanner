@@ -64,8 +64,8 @@ public class ModelDumper {
         System.out.print("Model Dump from 'course_data_2016.csv' file\n\n");//TODO: this is currently hardcoded
         sortAlphabetical();
         for(Course currentCourse : courseList){
-            sortLocationAlphabetical(currentCourse);
-            sortNumericalYearSem(currentCourse);
+//            sortLocationAlphabetical(currentCourse);
+//            sortNumericalYearSem(currentCourse);
 
             System.out.print(currentCourse.getCourseInfo());
         }
@@ -108,23 +108,23 @@ public class ModelDumper {
         });
     }
 
-    private void sortNumericalYearSem(Course course){
-        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
-            @Override
-            public int compare(Offering o1, Offering o2)
-            {
-                return o1.getOfferingId().compareTo(o2.getOfferingId());
-            }
-        });
-    }
-
-    private void sortLocationAlphabetical(Course course){
-        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
-            @Override
-            public int compare(Offering o1, Offering o2)
-            {
-                return o1.getLocation().compareTo(o2.getLocation());
-            }
-        });
-    }
+//    private void sortNumericalYearSem(Course course){
+//        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
+//            @Override
+//            public int compare(Offering o1, Offering o2)
+//            {
+//                return o1.getOfferingId().compareTo(o2.getOfferingId());
+//            }
+//        });
+//    }
+//
+//    private void sortLocationAlphabetical(Course course){
+//        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
+//            @Override
+//            public int compare(Offering o1, Offering o2)
+//            {
+//                return o1.getLocation().compareTo(o2.getLocation());
+//            }
+//        });
+//    }
 }
