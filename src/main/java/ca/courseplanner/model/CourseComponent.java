@@ -35,18 +35,25 @@ public class CourseComponent {
     /**
      * Checks if the CourseComponent is equal to the String in question.
      * @param componentCode Must not be null. String contains the component code in question.
-     * @return Boolean showing if the CourseComponent is euqla to the String in question.
+     * @return Boolean showing if the CourseComponent is equal to the String in question.
      */
     public boolean isEqual(String componentCode){
         return this.componentCode.equals(componentCode);
     }
-    //TODO: make sure to turn this into equals()
 
     /**
      * Returns the information about the courseComponent.
-     * @return String containing the information about the courseComponent.
+     * @return String containing the information about the CourseComponent.
      */
     public String getCourseComponentInfo(){
         return "Type=" + componentCode + ", Enrollment=" + enrollmentNumber + "/" + totalEnrollmentNumber + "\n";
+    }
+
+    /**
+     * Returns the componentCode of the CourseComponent.
+     * @return String containing the componentCode of the CourseComponent.
+     */
+    public String getComponentCode(){
+        return componentCode;
     }
 }
