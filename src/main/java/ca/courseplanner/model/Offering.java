@@ -39,7 +39,7 @@ public class Offering {
                     break;
                 }
             }
-            if(!isAlreadyAdded && !newInstructor.equals("(null)")){
+            if(!isAlreadyAdded && (!newInstructor.equals("(null)") && !newInstructor.equals("<null>"))){
                 instructorList.add(newInstructor);
             }
         }
