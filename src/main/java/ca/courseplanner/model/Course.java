@@ -1,6 +1,8 @@
 package ca.courseplanner.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -19,6 +21,8 @@ public class Course {
     public Course(String subject, String catalogNumber){
         this.subject = subject;
         this.catalogNumber = catalogNumber;
+
+
     }
 
     /**
@@ -50,6 +54,8 @@ public class Course {
      * @return Returns a String containing the information about the Course.
      */
     public String getCourseInfo(){
+        sortLocationAlphabetical(this);
+        sortNumericalYearSem(this);
         StringBuilder stringBuilder = new StringBuilder(subject + " " + catalogNumber + "\n");
         for(Offering currentOffering : offeringList){
             stringBuilder.append(currentOffering.getOfferingInfo());
@@ -110,5 +116,25 @@ public class Course {
     public List<Offering> getOfferingList()
     {
         return offeringList;
+    }
+
+    private void sortNumericalYearSem(Course course){
+        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
+            @Override
+            public int compare(Offering o1, Offering o2)
+            {
+                return o1.getOfferingId().compareTo(o2.getOfferingId());
+            }
+        });
+    }
+
+    private void sortLocationAlphabetical(Course course){
+        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
+            @Override
+            public int compare(Offering o1, Offering o2)
+            {
+                return o1.getLocation().compareTo(o2.getLocation());
+            }
+        });
     }
 }

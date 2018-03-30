@@ -61,34 +61,34 @@ public class ModelDumper {
     public void dumpToConsole(){
         //Use this for the final version
 
-        System.out.print("Model Dump from 'course_data_2016.csv' file\n\n");//TODO: this is currently hardcoded
-        sortAlphabetical();
-        for(Course currentCourse : courseList){
-            sortLocationAlphabetical(currentCourse);
-            sortNumericalYearSem(currentCourse);
-
-            System.out.print(currentCourse.getCourseInfo());
-        }
+//        System.out.print("Model Dump from 'course_data_2016.csv' file\n\n");//TODO: this is currently hardcoded
+//        sortAlphabetical();
+//        for(Course currentCourse : courseList){
+////            sortLocationAlphabetical(currentCourse);
+////            sortNumericalYearSem(currentCourse);
+//
+//            System.out.print(currentCourse.getCourseInfo());
+//        }
 
         //Use this while debugging
 
-//        File logFile = new File("./data/output.txt");
-//        try(BufferedWriter writer = new BufferedWriter(new FileWriter(logFile))) {
-//
-//            writer.write("Model Dump from 'course_data_2016.csv' file\n\n");//TODO: this is currently hardcoded
-//
-//            sortAlphabetical();
-//            for(Course currentCourse : courseList){
+        File logFile = new File("./data/output_dump.txt");
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(logFile))) {
+
+            writer.write("Model Dump from 'course_data_2018.csv' file\n\n");//TODO: this is currently hardcoded
+
+            sortAlphabetical();
+            for(Course currentCourse : courseList){
 //                sortLocationAlphabetical(currentCourse);
 //                sortNumericalYearSem(currentCourse);
-//
-//                System.out.print(currentCourse.getCourseInfo());
-//                writer.write(currentCourse.getCourseInfo());
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
+                System.out.print(currentCourse.getCourseInfo());
+                writer.write(currentCourse.getCourseInfo());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void addNewCourseListElement(String subject, String catalogNumber){
@@ -108,23 +108,23 @@ public class ModelDumper {
         });
     }
 
-    private void sortNumericalYearSem(Course course){
-        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
-            @Override
-            public int compare(Offering o1, Offering o2)
-            {
-                return o1.getOfferingId().compareTo(o2.getOfferingId());
-            }
-        });
-    }
-
-    private void sortLocationAlphabetical(Course course){
-        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
-            @Override
-            public int compare(Offering o1, Offering o2)
-            {
-                return o1.getLocation().compareTo(o2.getLocation());
-            }
-        });
-    }
+//    private void sortNumericalYearSem(Course course){
+//        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
+//            @Override
+//            public int compare(Offering o1, Offering o2)
+//            {
+//                return o1.getOfferingId().compareTo(o2.getOfferingId());
+//            }
+//        });
+//    }
+//
+//    private void sortLocationAlphabetical(Course course){
+//        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
+//            @Override
+//            public int compare(Offering o1, Offering o2)
+//            {
+//                return o1.getLocation().compareTo(o2.getLocation());
+//            }
+//        });
+//    }
 }
