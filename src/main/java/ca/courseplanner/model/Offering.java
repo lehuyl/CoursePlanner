@@ -1,7 +1,6 @@
 package ca.courseplanner.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Offering implementation which describes the properties of an offering of a course.
@@ -32,7 +31,18 @@ public class Offering {
      * @param totalEnrollmentNumber Must not be null. Into containing how many more seats are available in the course.
      */
     public void addCourseComponentInfo(String componentCode, int enrollmentNumber, int totalEnrollmentNumber, List<String> newInstructorList){
-        instructorList.addAll(newInstructorList);
+        for(String newInstructor : newInstructorList){
+            boolean isAlreadyAdded = false;
+            for(String instructor : instructorList){
+                if(instructor.equals(newInstructor)){
+                    isAlreadyAdded = true;
+                    break;
+                }
+            }
+            if(!isAlreadyAdded && !newInstructor.equals("(null)")){
+                instructorList.add(newInstructor);
+            }
+        }
 
         for(CourseComponent currentCourseComponent : courseComponentList){
             if(currentCourseComponent.isEqual(componentCode)){
@@ -57,7 +67,6 @@ public class Offering {
     public boolean isEqual(int year, int semester, String location){
         return this.year == year && this.semester == semester && this.location.equals(location);
     }
-    //TODO: turn this to equals()?
 
     /**
      * Returns the information about the Offering.
@@ -66,34 +75,26 @@ public class Offering {
     public String getOfferingInfo(){
         StringBuilder stringBuilder = new StringBuilder("\t" + year + semester + " in " + location + " by ");
 
+        Set<String> instructorDuplicateSet = new HashSet<>();
         for(String currentInstructor : instructorList){
-            stringBuilder.append(currentInstructor);
-            if(instructorList.indexOf(currentInstructor) != instructorList.size() - 1){
-                stringBuilder.append(", ");
+            if(!instructorDuplicateSet.contains(currentInstructor))
+            {
+                stringBuilder.append(currentInstructor);
+                if(instructorList.indexOf(currentInstructor) != instructorList.size() - 1){
+                    stringBuilder.append(", ");
+                }
+                instructorDuplicateSet.add(currentInstructor);
             }
         }
         stringBuilder.append("\n");
 
+        sortComponentAlphabetical();
+
         for(CourseComponent currentCourseComponent : courseComponentList){
             stringBuilder.append("\t\t");
             stringBuilder.append(currentCourseComponent.getCourseComponentInfo());
-            stringBuilder.append("\n");
         }
         return stringBuilder.toString();
-    }
-
-    /**
-     * Checks if the CourseComponent already exists in the list.
-     * @param componentCode Must not be null. String that contains the componentCode of the CourseComponent.
-     * @return Boolean showing if the courseComponent already exists in the list.
-     */
-    private boolean doesCourseComponentInfoExist(String componentCode){
-        for(CourseComponent currentCourseComponent : courseComponentList){
-            if(currentCourseComponent.isEqual(componentCode)){
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -102,5 +103,35 @@ public class Offering {
      */
     private void addNewCourseComponentListElement(String componentCode){
         courseComponentList.add(new CourseComponent(componentCode));
+    }
+
+    /**
+     * Gets the OfferingId of the Offering.
+     * @return String containing the OfferingId of the Offering.
+     */
+    public String getOfferingId()
+    {
+        return "" + year + semester;
+    }
+
+    /**
+     * Gets the Location of the Offering.
+     * @return String containing the location of the Offering.
+     */
+    public String getLocation()
+    {
+        return location;
+    }
+
+    /**
+     * Sorts the CourseComponent list alphabetically.
+     */
+    private void sortComponentAlphabetical(){
+        courseComponentList.sort(new Comparator<CourseComponent>(){
+            @Override
+            public int compare(CourseComponent component1, CourseComponent component2){
+                return component1.getComponentCode().compareTo(component2.getComponentCode());
+            }
+        });
     }
 }

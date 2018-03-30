@@ -57,6 +57,7 @@ public class Course {
         return stringBuilder.toString();
     }
 
+    //TODO: javadocs
     @Override
     public boolean equals(Object otherObject){
         if(otherObject.getClass() == this.getClass()){
@@ -76,28 +77,20 @@ public class Course {
         return subject.equals(this.subject) && catalogNumber.equals(this.catalogNumber);
     }
 
+    /**
+     * Gets the Subject of the Course.
+     * @return String containing the Subject of the Course.
+     */
     public String getSubject() {
         return subject;
     }
 
+    /**
+     * Gets the CatalogNumber of the Course.
+     * @return String containing the CatalogNumber of the Course.
+     */
     public String getCatalogNumber() {
         return catalogNumber;
-    }
-
-    /**
-     * Checks if the Offering already exists in the list.
-     * @param year Must not be null. Int containing the year code of the course.
-     * @param semester Must not be null. Int containing the semester code of the course.
-     * @param location Must not be null. String containing the location of the course.
-     * @return Boolean containing if the Offering already exists in the list.
-     */
-    private boolean doesOfferingExists(int year, int semester, String location){
-        for(Offering currentOffering : offeringList){
-            if(currentOffering.isEqual(year, semester, location)){
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -108,5 +101,14 @@ public class Course {
      */
     private void addNewOfferingListElement(int year, int semester, String location){
         offeringList.add(new Offering(year, semester, location));
+    }
+
+    /**
+     * Gets the offeringList of the Course.
+     * @return List of Offering objects of the Course.
+     */
+    public List<Offering> getOfferingList()
+    {
+        return offeringList;
     }
 }

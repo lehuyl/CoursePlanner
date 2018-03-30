@@ -12,20 +12,33 @@ public class CoursePlannerController
 {
     ModelDumper modelDumper = new ModelDumper();
 
-    @GetMapping("/hello")
-    public String getHelloMessage()
-    {
-        return "Hello World";
-    }
-
     @GetMapping("/dump-model")
-    public void dumpModelInfo(){
+    public void dumpModelInfo(){//TODO: clean up later
         //get the scanner
-        File file = new File("./data/course_data_2018.csv");
+        File file = new File("./data/course_data_2016.csv");//TODO: change later to 2018 upon submission
         try(Scanner scanner = new Scanner(file)){
-            while(scanner.hasNext()){
-                System.out.println(scanner.nextLine() + " | ");
+//            while(scanner.hasNext()){
+//                System.out.println(scanner.nextLine() + " | ");
+//            }
+            int lineNumber = 1;
+            while(scanner.hasNextLine())
+            {
+//                System.out.println(scanner.nextLine());
+                if(lineNumber == 1)
+                {
+                    scanner.nextLine();
+                }
+                else
+                {
+                    String[] newLine = scanner.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+
+                    modelDumper.addNewRecord(newLine);
+                }
+                lineNumber++;
             }
+
+            modelDumper.dumpToConsole();
+
         }catch(Exception e){
             System.out.println("something bad happened");//TODO: fix this later
         }
