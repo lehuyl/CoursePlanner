@@ -1,28 +1,47 @@
 package ca.courseplanner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Offering implementation which describes the properties of an offering of a course.
  */
 public class Course {
-    private String subject;
+    private long courseId;
     private String catalogNumber;
+
     private List<Offering> offeringList = new ArrayList<>();
+    private AtomicLong nextOfferingId = new AtomicLong();
 
     /**
-     * Constructor for the Course object.
-     * @param subject Must not be null. String containing the subject of the course.
-     * @param catalogNumber Must not be null. String containing the catalogNumber of the course.
+     * Constructor for the Course.
+     * @param courseId Must not be null. Long containing the id of the course.
+     * @param catalogNumber Must not be null. String containing the catalog number of the course.
      */
-    public Course(String subject, String catalogNumber){
-        this.subject = subject;
+    public Course(long courseId, String catalogNumber){
+        this.courseId = courseId;
         this.catalogNumber = catalogNumber;
+    }
 
+    /**
+     * Gets the course Id of the course.
+     * @return Long containing the ID of the course.
+     */
+    public long getCourseId(){
+        return courseId;
+    }
 
+    /**
+     * Gets the CatalogNumber of the Course.
+     * @return String containing the CatalogNumber of the Course.
+     */
+    public String getCatalogNumber() {
+        return catalogNumber;
     }
 
     /**
@@ -53,50 +72,25 @@ public class Course {
      * Gets the information about the Course.
      * @return Returns a String containing the information about the Course.
      */
+    @JsonIgnore
     public String getCourseInfo(){
-        sortLocationAlphabetical(this);
-        sortNumericalYearSem(this);
-        StringBuilder stringBuilder = new StringBuilder(subject + " " + catalogNumber + "\n");
+        sortLocationAlphabetical();
+        sortNumericalYearSem();
+        StringBuilder stringBuilder = new StringBuilder(catalogNumber + "\n");
         for(Offering currentOffering : offeringList){
             stringBuilder.append(currentOffering.getOfferingInfo());
         }
         return stringBuilder.toString();
     }
 
-    //TODO: javadocs
-    @Override
-    public boolean equals(Object otherObject){
-        if(otherObject.getClass() == this.getClass()){
-            Course otherCourse = (Course)otherObject;
-            return otherCourse.getSubject().equals(this.getSubject()) && otherCourse.getCatalogNumber().equals(this.getCatalogNumber());
-        }
-        return false;
-    }
-
     /**
-     * Checks if the Course information matches the current object.
-     * @param subject Must not be null. String containing the subject of the course.
-     * @param catalogNumber Must not be null. String containing the catalogNumber of the course.
-     * @return Boolean containing if the Course information matches the current object.
+     * Checks if the current information matches the Course's information.
+     * @param catalogNumber Must not be null. String containing the catalogNumber.
+     * @return Boolean to see if the current information matches the Course's information.
      */
-    public boolean isEqual(String subject, String catalogNumber){
-        return subject.equals(this.subject) && catalogNumber.equals(this.catalogNumber);
-    }
-
-    /**
-     * Gets the Subject of the Course.
-     * @return String containing the Subject of the Course.
-     */
-    public String getSubject() {
-        return subject;
-    }
-
-    /**
-     * Gets the CatalogNumber of the Course.
-     * @return String containing the CatalogNumber of the Course.
-     */
-    public String getCatalogNumber() {
-        return catalogNumber;
+    @JsonIgnore
+    public boolean isEqual(String catalogNumber){
+        return catalogNumber.equals(this.catalogNumber);
     }
 
     /**
@@ -106,35 +100,46 @@ public class Course {
      * @param location Must not be null. String containing the location of the course.
      */
     private void addNewOfferingListElement(int year, int semester, String location){
-        offeringList.add(new Offering(year, semester, location));
+        offeringList.add(new Offering(nextOfferingId.incrementAndGet(), location, year, semester));
     }
 
     /**
-     * Gets the offeringList of the Course.
-     * @return List of Offering objects of the Course.
+     * Sorts the offering list in an ascending order using the offeringID given by SFU.
      */
-    public List<Offering> getOfferingList()
-    {
-        return offeringList;
-    }
-
-    private void sortNumericalYearSem(Course course){
-        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
+    private void sortNumericalYearSem(){
+        offeringList.sort(new Comparator<Offering>() {
             @Override
-            public int compare(Offering o1, Offering o2)
-            {
+            public int compare(Offering o1, Offering o2){
                 return o1.getOfferingId().compareTo(o2.getOfferingId());
             }
         });
     }
 
-    private void sortLocationAlphabetical(Course course){
-        Collections.sort(course.getOfferingList(), new Comparator<Offering>(){
+    /**
+     * Sorts the offering list in ascending order using the location of the course.
+     */
+    private void sortLocationAlphabetical(){
+        offeringList.sort(new Comparator<Offering>() {
             @Override
-            public int compare(Offering o1, Offering o2)
-            {
+            public int compare(Offering o1, Offering o2) {
                 return o1.getLocation().compareTo(o2.getLocation());
             }
         });
+    }
+
+    @JsonIgnore
+    public List<Offering> getOfferingList(){
+        return offeringList;
+    }
+
+    @JsonIgnore
+    public Offering getOfferingWithID(long offeringId){
+        for(Offering currentOffering : offeringList){
+            if(currentOffering.getCourseOfferingId() == offeringId){
+                return currentOffering;
+            }
+        }
+
+        return null;
     }
 }
