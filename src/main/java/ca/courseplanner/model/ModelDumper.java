@@ -42,6 +42,9 @@ public class ModelDumper {
         record[6] = record[6].replace("\"", "");
         record[6] = record[6].replace(", ", ",");
         newInstructorList = Arrays.asList(record[6].split(","));
+        for(int i = 0; i < newInstructorList.size(); i++){
+            newInstructorList.set(i, newInstructorList.get(i).trim());
+        }
         componentCode = record[7];
 
         for(Course currentCourse : courseList){
