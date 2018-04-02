@@ -1,27 +1,99 @@
 package ca.courseplanner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.*;
 
 /**
  * Offering implementation which describes the properties of an offering of a course.
  */
 public class Offering {
-    private int year;
-    private int semester;
+    private long courseOfferingId;
     private String location;
-    private List<String> instructorList = new ArrayList<>();
+    private List<String> instructorList = new ArrayList<>();//TODO: rename to "instructors" .. not sure if this should be a list or just one string
+    private String term;
+    private int semesterCode;
+    private int year;
+
+    private int yearCode;
     private List<CourseComponent> courseComponentList = new ArrayList<>();
+    //TODO: order this correctly later.. also, course: Optional JSON object for the course related to this section. Unused in the UI.
 
     /**
-     * Constructor for the Offering.
-     * @param year Must not be null. Int containing the year code of the course.
-     * @param semester Must not be null. Int containing the semester code of the course.
-     * @param location Must not be null. String containing the location of the course.
+     * Constructor for the Offering Object.
+     * @param courseOfferingId Must not be null. Long containing the ID given by the model.
+     * @param location Must not be null. String containing the location of the offering.
+     * @param yearCode Must not be null. Integer containing the year code of the offering.
+     * @param semesterCode Must not be null. Integer containing the semester code of the offering.
      */
-    public Offering(int year, int semester, String location){
-        this.year = year;
-        this.semester = semester;
-        this.location = location;//TODO: make this all caps?
+    public Offering(long courseOfferingId, String location, int yearCode, int semesterCode){
+        this.courseOfferingId = courseOfferingId;
+        this.location = location;
+        this.yearCode = yearCode;
+        this.year = yearCode;//TODO: there is a formula for this
+        this.semesterCode = semesterCode;
+
+        switch (semesterCode){
+            case 1:
+                this.term = "SPRING";//TODO: make this enum
+                break;
+            case 4:
+                this.term = "SUMMER";
+                break;
+            case 7:
+                this.term = "FALL";
+                break;
+            default:
+                assert false;
+        }
+    }
+
+    /**
+     * Gets the offering Id given by the model.
+     * @return Long containing the offering ID given by the model.
+     */
+    public long getCourseOfferingId(){
+        return courseOfferingId;
+    }
+
+    /**
+     * Gets the Location of the Offering.
+     * @return String containing the location of the Offering.
+     */
+    public String getLocation(){
+        return location;
+    }
+
+    /**
+     * Gets the list of instructors in the offering.
+     * @return String containing the list of instructors in the offering.
+     */
+    public String getInstructors(){
+        return "";//TODO: error check
+    }
+
+    /**
+     * Gets the term for when the offering is offered.
+     * @return String containing when the offering is offered.
+     */
+    public String getTerm(){
+        return term;
+    }
+
+    /**
+     * Gets the code given by SFU of the offering.
+     * @return Integer containing the code given by SFU of the offering.
+     */
+    public int getSemesterCode(){
+        return yearCode * 10 + semesterCode;
+    }
+
+    /**
+     * Gets the year for when this offering is offered.
+     * @return Integer containing the year for when this offering is offered.
+     */
+    public int getYear(){
+        return year;
     }
 
     /**
@@ -58,22 +130,24 @@ public class Offering {
     }
 
     /**
-     * Checks if the Offering information matches the current object.
-     * @param year Must not be null. Int contains the year code of the course.
-     * @param semester Must not be null. Int contains the semester code of the course.
-     * @param location Must not be null. String contains the location of the course.
-     * @return Boolean showing if the information matches the current object.
+     * Checks if the information matches the current Offering object.
+     * @param yearCode Must not be null. Integer containing the year code of the offering.
+     * @param semesterCode Must not be null. Integer containing the semester code of the offering.
+     * @param location Must not be null. String containing the location of the offering.
+     * @return Boolean containing if the information matches the current Offering Object.
      */
-    public boolean isEqual(int year, int semester, String location){
-        return this.year == year && this.semester == semester && this.location.equals(location);
+    @JsonIgnore
+    public boolean isEqual(int yearCode, int semesterCode, String location){
+        return this.yearCode == yearCode && this.semesterCode == semesterCode && this.location.equals(location);
     }
 
     /**
      * Returns the information about the Offering.
      * @return String containing the information about the Offering.
      */
+    @JsonIgnore
     public String getOfferingInfo(){
-        StringBuilder stringBuilder = new StringBuilder("\t" + year + semester + " in " + location + " by ");
+        StringBuilder stringBuilder = new StringBuilder("\t" + yearCode + semesterCode + " in " + location + " by ");
 
         Set<String> instructorDuplicateSet = new HashSet<>();
         for(String currentInstructor : instructorList){
@@ -109,18 +183,10 @@ public class Offering {
      * Gets the OfferingId of the Offering.
      * @return String containing the OfferingId of the Offering.
      */
+    @JsonIgnore
     public String getOfferingId()
     {
-        return "" + year + semester;
-    }
-
-    /**
-     * Gets the Location of the Offering.
-     * @return String containing the location of the Offering.
-     */
-    public String getLocation()
-    {
-        return location;
+        return "" + yearCode + semesterCode;
     }
 
     /**
@@ -133,5 +199,10 @@ public class Offering {
                 return component1.getComponentCode().compareTo(component2.getComponentCode());
             }
         });
+    }
+
+    @JsonIgnore
+    public List<CourseComponent> getCourseComponentList(){
+        return courseComponentList;
     }
 }
