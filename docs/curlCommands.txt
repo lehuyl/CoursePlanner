@@ -1,0 +1,7 @@
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/2/courses
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/2/courses/20/offerings
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/2/courses/20/offerings/7

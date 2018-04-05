@@ -129,6 +129,8 @@ public class Course {
 
     @JsonIgnore
     public List<Offering> getOfferingList(){
+        sortLocationAlphabetical();
+        sortNumericalYearSem();
         return offeringList;
     }
 

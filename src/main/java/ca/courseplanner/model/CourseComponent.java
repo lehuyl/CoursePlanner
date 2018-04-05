@@ -22,7 +22,7 @@ public class CourseComponent {
      * Returns the componentCode of the CourseComponent.
      * @return String containing the componentCode of the CourseComponent.
      */
-    public String getComponentCode(){
+    public String getType(){
         return type;
     }
 
@@ -42,20 +42,30 @@ public class CourseComponent {
         return enrollmentTotal;
     }
 
-    /**
-     * Updates the amount of people enrolled in the CourseComponent.
-     * @param enrollmentAmount Must not be null. Int containing how many people to be updated into the enrollment number.
-     */
-    public void addEnrollment(int enrollmentAmount){
-        enrollmentCap += enrollmentAmount;
+//    /**
+//     * Updates the amount of people enrolled in the CourseComponent.
+//     * @param enrollmentAmount Must not be null. Int containing how many people to be updated into the enrollment number.
+//     */
+//    public void addEnrollment(int enrollmentAmount){
+////        enrollmentCap += enrollmentAmount;
+//        enrollmentTotal += enrollmentAmount;
+//    }
+
+    public void addEnrollmentTotal(int enrollmentTotal){
+        this.enrollmentTotal += enrollmentTotal;
     }
 
-    /**
-     * Updates the amount of seats available in the CourseComponent.
-     * @param seats Must not be null. Int containing how many seats to be updated into the total enrollment number.
-     */
-    public void addEnrollmentTotal(int seats){
-        enrollmentTotal += seats;
+//    /**
+//     * Updates the amount of seats available in the CourseComponent.
+//     * @param seats Must not be null. Int containing how many seats to be updated into the total enrollment number.
+//     */
+//    public void addEnrollmentTotal(int seats){
+////        enrollmentTotal += seats;
+//        enrollmentCap += seats;
+//    }
+
+    public void addEnrollmentCap(int enrollmentCap){
+        this.enrollmentCap += enrollmentCap;
     }
 
     /**

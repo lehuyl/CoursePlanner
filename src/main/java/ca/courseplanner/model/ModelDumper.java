@@ -17,8 +17,29 @@ public class ModelDumper {
     /**
      * ModelDumper constructor.
      */
-    public ModelDumper(){
+    public ModelDumper(String filename){
+        File file = new File(filename);//TODO: change later to 2018 upon submission
+        try(Scanner scanner = new Scanner(file)){
 
+            int lineNumber = 1;
+            while(scanner.hasNextLine())
+            {
+                if(lineNumber == 1)
+                {
+                    scanner.nextLine();
+                }
+                else
+                {
+                    String[] newLine = scanner.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+
+                    addNewRecord(newLine);
+                }
+                lineNumber++;
+            }
+
+        }catch(Exception e){
+            System.out.println("something bad happened");//TODO: fix this later
+        }
     }
 
     /**
