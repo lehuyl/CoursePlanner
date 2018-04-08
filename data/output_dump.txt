@@ -1,8 +1,5 @@
 Model Dump from 'course_data_2018.csv' file
 
-ABCD 101
-	1191 in Vancouver by Mystery Instructor
-		Type=LEC, Enrollment=110/123
 CHIN 180
 	1137 in BURNABY by Haisheng Jiang, Billie Ng
 		Type=TUT, Enrollment=30/12
@@ -1237,6 +1234,9 @@ CMNS 899
 		Type=SEC, Enrollment=40/20
 	1094 in OFF by . Faculty
 		Type=SEC, Enrollment=40/4
+CMNSLLLL 800
+	1191 in Vancouver by Mystery Instructor
+		Type=LEC, Enrollment=110/123
 CMPT 100
 	1091 in BURNABY by Steven Pearce
 		Type=LEC, Enrollment=30/21
@@ -18365,8 +18365,6 @@ MSE 102
 		Type=LAB, Enrollment=120/0
 		Type=LEC, Enrollment=200/78
 		Type=TUT, Enrollment=200/78
-	1191 in Vancouver by Mystery Instructor
-		Type=LEC, Enrollment=110/123
 MSE 110
 	1134 in SURREY by Amr Marzouk
 		Type=LAB, Enrollment=60/55

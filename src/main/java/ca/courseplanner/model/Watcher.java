@@ -3,7 +3,9 @@ package ca.courseplanner.model;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: javadocs
+/**
+ * Keeps a record of changes made to a course and its offerings.
+ */
 public class Watcher implements Observer{
     private long id;
     private Department department;

@@ -16,154 +16,107 @@ public class CoursePlannerController
     private AtomicLong nextWatcherId = new AtomicLong();
 
     @GetMapping("/api/about")
-    public About getAbout(){
+    public About getAbout()
+    {
         return new About("appname", "miguel and steven");//TODO: error check
     }
 
     @GetMapping("/api/dump-model")
-    public void dumpModelInfo(){//TODO: clean up later
-        //get the scanner
-//        File file = new File("./data/course_data_2018.csv");//TODO: change later to 2018 upon submission
-//        try(Scanner scanner = new Scanner(file)){
-//
-//            int lineNumber = 1;
-//            while(scanner.hasNextLine())
-//            {
-//                if(lineNumber == 1)
-//                {
-//                    scanner.nextLine();
-//                }
-//                else
-//                {
-//                    String[] newLine = scanner.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-//
-//                    modelDumper.addNewRecord(newLine);
-//                }
-//                lineNumber++;
-//            }
-//
-//            modelDumper.dumpToConsole();
-//
-//        }catch(Exception e){
-//            System.out.println("something bad happened");//TODO: fix this later
-//        }
+    public void dumpModelInfo()
+    {
         modelDumper.dumpToConsole();
     }
 
     @GetMapping("/api/departments")
-    public List<Department> getDepartmentList(){
-//        File file = new File("./data/course_data_2018.csv");//TODO: change later to 2018 upon submission
-//        try(Scanner scanner = new Scanner(file)){
-//
-//            int lineNumber = 1;
-//            while(scanner.hasNextLine())
-//            {
-//                if(lineNumber == 1)
-//                {
-//                    scanner.nextLine();
-//                }
-//                else
-//                {
-//                    String[] newLine = scanner.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-//
-//                    modelDumper.addNewRecord(newLine);
-//                }
-//                lineNumber++;
-//            }
-//
-////            modelDumper.dumpToConsole();
-////            return modelDumper.getDepartmentList();
-//        }catch(Exception e){
-//            System.out.println("something bad happened");//TODO: fix this later
-//        }
-
+    public List<Department> getDepartmentList()
+    {
         return modelDumper.getDepartmentList();
     }
 
     @GetMapping("/api/departments/{deptId}/courses")
-    public List<Course> getDepartmentCourses(@PathVariable("deptId") long deptId){
-        for(Department dept: modelDumper.getDepartmentList())
+    public List<Course> getDepartmentCourses(@PathVariable("deptId") long deptId)
+    {
+        for (Department dept : modelDumper.getDepartmentList())
         {
-            if(dept.getDeptId() == deptId)
+            if (dept.getDeptId() == deptId)
             {
-//                return modelDumper.getDepartmentWithID(deptId).getCourseList();
                 return dept.getCourseList();
             }
         }
-        throw new IllegalArgumentException("Department of ID " + deptId + " not found.");
+        throw new DepartmentNotFoundException("Department of ID " + deptId + " not found.");
     }
 
     @GetMapping("/api/departments/{deptId}/courses/{courseId}/offerings")
-    public List<Offering> getDepartmentCourseOfferings(@PathVariable("deptId") long deptId, @PathVariable("courseId") long courseId){
-//        return modelDumper.getDepartmentWithID(deptId).getCourseWithID(courseId).getOfferingList();
-
-        for(Department dept: modelDumper.getDepartmentList())
+    public List<Offering> getDepartmentCourseOfferings(@PathVariable("deptId") long deptId, @PathVariable("courseId") long courseId)
+    {
+        for (Department dept : modelDumper.getDepartmentList())
         {
-            if(dept.getDeptId() == deptId)
+            if (dept.getDeptId() == deptId)
             {
-                if(dept.getCourseWithID(courseId) != null)
+                if (dept.getCourseWithID(courseId) != null)
                 {
                     return dept.getCourseWithID(courseId).getOfferingList();
                 }
                 else
                 {
-                    throw new IllegalArgumentException("Course of ID " + courseId + " not found.");
+                    throw new CourseNotFoundException("Course of ID " + courseId + " not found.");
 
                 }
-//                return dept.getCourseList();
             }
         }
-        throw new IllegalArgumentException("Department of ID " + deptId + " not found.");
+        throw new DepartmentNotFoundException("Department of ID " + deptId + " not found.");
     }
 
 
     @GetMapping("/api/departments/{deptId}/courses/{courseId}/offerings/{offeringId}")
-//    public List<CourseComponent> getDepartmentCourseOfferingComponents(@PathVariable("deptId") long deptId, @PathVariable("courseId") long courseId, @PathVariable("offeringId") long offeringId){
-    public List<CourseComponent> getDepartmentCourseOfferingComponents(@PathVariable("deptId") long deptId, @PathVariable("courseId") long courseId, @PathVariable("offeringId") long offeringId){
-        if(modelDumper.getDepartmentWithID(deptId) != null)
+
+    public List<CourseComponent> getDepartmentCourseOfferingComponents(@PathVariable("deptId") long deptId, @PathVariable("courseId") long courseId, @PathVariable("offeringId") long offeringId)
+    {
+        if (modelDumper.getDepartmentWithID(deptId) != null)
         {
             Department dept = modelDumper.getDepartmentWithID(deptId);
-            if(dept.getCourseWithID(courseId) != null)
+            if (dept.getCourseWithID(courseId) != null)
             {
                 Course course = dept.getCourseWithID(courseId);
-                if(course.getOfferingWithID(offeringId) != null)
+                if (course.getOfferingWithID(offeringId) != null)
                 {
                     return course.getOfferingWithID(offeringId).getCourseComponentList();
                 }
                 else
                 {
-                    throw new IllegalArgumentException(("Course offering of ID " + offeringId + " not found."));
+                    throw new OfferingNotFoundException(("Course offering of ID " + offeringId + " not found."));
                 }
             }
             else
             {
-                throw new IllegalArgumentException("Course of ID " + courseId + " not found.");
+                throw new CourseNotFoundException("Course of ID " + courseId + " not found.");
             }
         }
         else
         {
-            throw new IllegalArgumentException("Department of ID " + deptId + " not found.");
+            throw new DepartmentNotFoundException("Department of ID " + deptId + " not found.");
         }
     }
 
     @GetMapping("/api/stats/students-per-semester")//TODO: error check, also switch out void later
-    public List<DataPoint> getDataPointList(@RequestParam("deptId") long deptId){
+    public List<DataPoint> getDataPointList(@RequestParam("deptId") long deptId)
+    {
         //TODO: i think this should have a DataPoint object, a list of them to be exact
         //TODO: error check heavily
 
         /*
-        * go to the department id, go inside each course inside each offering and add up
-        * */
+         * go to the department id, go inside each course inside each offering and add up
+         * */
 
         //go through each offering in each course in the department
-            //check if this offering semesterCode exists in the dataPoints
-            //if not, make a dataPoint with that semesterCode
-            //else keep going as if nothing happened
+        //check if this offering semesterCode exists in the dataPoints
+        //if not, make a dataPoint with that semesterCode
+        //else keep going as if nothing happened
 
-            //go inside the offering for its componentList and add that into the specific dataPoint
-        if(modelDumper.getDepartmentWithID(deptId) == null)
+        //go inside the offering for its componentList and add that into the specific dataPoint
+        if (modelDumper.getDepartmentWithID(deptId) == null)
         {
-            throw new IllegalArgumentException("Department of ID " + deptId + " not found.");
+            throw new DepartmentNotFoundException("Department of ID " + deptId + " not found.");
         }
         else
         {
@@ -240,15 +193,16 @@ public class CoursePlannerController
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/addoffering")//TODO: error check
-    public CourseComponent addNewOffering(@RequestBody Record record){
+    public CourseComponent addNewOffering(@RequestBody Record record)
+    {
         String[] stringArray = {"" + record.getSemester(),
-            record.getSubjectName(),
-            record.getCatalogNumber(),
-            record.getLocation(),
-            "" + record.getEnrollmentTotal(),
-            "" + record.getEnrollmentCap(),
-            record.getInstructor(),
-            record.getComponent()};
+                record.getSubjectName(),
+                record.getCatalogNumber(),
+                record.getLocation(),
+                "" + record.getEnrollmentTotal(),
+                "" + record.getEnrollmentCap(),
+                record.getInstructor(),
+                record.getComponent()};
         modelDumper.addNewRecord(stringArray);
 
         //TODO: not sure if this is a hack
@@ -259,30 +213,38 @@ public class CoursePlannerController
     }
 
     @GetMapping("/api/watchers")
-    public List<Watcher> getChangeWatchers(){
+    public List<Watcher> getChangeWatchers()
+    {
         return watcherList;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/watchers")
-    public Watcher createWatcher(@RequestBody WatcherContents watcherContents){
+    public Watcher createWatcher(@RequestBody WatcherContents watcherContents)
+    {
         long deptId = watcherContents.getDeptId();
         long courseId = watcherContents.getCourseId();
-        if(modelDumper.getDepartmentWithID(deptId) != null){
+        if (modelDumper.getDepartmentWithID(deptId) != null)
+        {
             System.out.println("the department id exists");
             Department department = null;
-            for(Department currentDepartment : modelDumper.getDepartmentList()){
-                if(currentDepartment.getDeptId() == deptId){
+            for (Department currentDepartment : modelDumper.getDepartmentList())
+            {
+                if (currentDepartment.getDeptId() == deptId)
+                {
                     System.out.println("the department has been set");
                     department = currentDepartment;
                 }
             }
 
-            if(department.getCourseWithID(courseId) != null){
+            if (department.getCourseWithID(courseId) != null)
+            {
                 System.out.println("the course id exists");
                 Course course = null;
-                for(Course currentCourse : department.getCourseList()){
-                    if(currentCourse.getCourseId() == courseId){
+                for (Course currentCourse : department.getCourseList())
+                {
+                    if (currentCourse.getCourseId() == courseId)
+                    {
                         System.out.println("the course has been set");
                         course = currentCourse;
                     }
@@ -295,43 +257,43 @@ public class CoursePlannerController
             }
             else
             {
-                throw new IllegalArgumentException("Course of ID " + courseId + " not found.");
+                throw new CourseNotFoundException("Course of ID " + courseId + " not found.");
             }
         }
-        //TODO: should return http 201
-        throw new IllegalArgumentException("Department of ID " + deptId + " not found.");
-//        return null;//TODO: make this give an error if it reaches this point
+        throw new DepartmentNotFoundException("Department of ID " + deptId + " not found.");
     }
 
     @GetMapping("/api/watchers/{watcherId}")
-    public Watcher getEventListOfWatcherId(@PathVariable("watcherId") long watcherId){
-        for(Watcher currentWatcher : watcherList){
-            if(currentWatcher.getId() == watcherId){
+    public Watcher getEventListOfWatcherId(@PathVariable("watcherId") long watcherId)
+    {
+        for (Watcher currentWatcher : watcherList)
+        {
+            if (currentWatcher.getId() == watcherId)
+            {
                 System.out.println("watcher has been found");
                 return currentWatcher;
             }
         }
-        throw new IllegalArgumentException("Watcher of ID " + watcherId + " not found.");
-//        return null;//TODO: return error here if doesnt exist
+        throw new ResourceNotFoundException("Unable to find requested watcher.");
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/api/watchers/{watcherId}")
-    public void deleteWatcherWithId(@PathVariable("watcherId") long watcherId){
+    public void deleteWatcherWithId(@PathVariable("watcherId") long watcherId)
+    {
         //TODO: should delete the watched with id ... watcherId
         //TODO: should return http 204
 
-        for(ListIterator<Watcher> iterator = watcherList.listIterator(); iterator.hasNext();)
+        for (ListIterator<Watcher> iterator = watcherList.listIterator(); iterator.hasNext(); )
         {
             Watcher watcher = iterator.next();
-            if(watcher.getId() == watcherId)
+            if (watcher.getId() == watcherId)
             {
-               iterator.remove();
-               return;
+                iterator.remove();
+                return;
             }
         }
 
-        throw new IllegalArgumentException("Watcher with ID " + watcherId + " not found.");
-
+        throw new ResourceNotFoundException("Unable to find requested watcher.");
     }
 }

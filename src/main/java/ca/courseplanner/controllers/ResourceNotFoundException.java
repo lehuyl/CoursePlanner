@@ -3,10 +3,11 @@ package ca.courseplanner.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class IllegalArgumentException extends RuntimeException
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException
 {
-   public IllegalArgumentException(String message) {
+    public ResourceNotFoundException(String message)
+    {
         super(message);
-   }
+    }
 }
