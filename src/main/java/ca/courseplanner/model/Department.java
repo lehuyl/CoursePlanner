@@ -119,6 +119,7 @@ public class Department {
 
     @JsonIgnore
     public List<Course> getCourseList(){
+        sortCoursesAscending();
         return courseList;
     }
 

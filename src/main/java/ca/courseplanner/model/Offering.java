@@ -11,6 +11,7 @@ public class Offering {
     private long courseOfferingId;
     private String location;
     private List<String> instructorList = new ArrayList<>();//TODO: rename to "instructors" .. not sure if this should be a list or just one string
+    private String instructors;
     private String term;
     private int semesterCode;
     private int year;
@@ -74,7 +75,15 @@ public class Offering {
      * @return String containing the list of instructors in the offering.
      */
     public String getInstructors(){
-        return "";//TODO: error check
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String currentInstructor : instructorList){
+            stringBuilder.append(currentInstructor);
+            if(instructorList.indexOf(currentInstructor) != instructorList.size() - 1){
+                stringBuilder.append(", ");
+            }
+        }
+        instructors = stringBuilder.toString();
+        return instructors;//TODO: error check
     }
 
     /**
@@ -123,15 +132,22 @@ public class Offering {
 
         for(CourseComponent currentCourseComponent : courseComponentList){
             if(currentCourseComponent.isEqual(componentCode)){
-                currentCourseComponent.addEnrollment(enrollmentNumber);
-                currentCourseComponent.addEnrollmentTotal(totalEnrollmentNumber);
+                //enrollmentNumber is how many people enrolled
+                //totalEnrollmentNumber is the capacity of that
+//                currentCourseComponent.addEnrollment(enrollmentNumber);
+//                currentCourseComponent.addEnrollmentTotal(totalEnrollmentNumber);
+
+                currentCourseComponent.addEnrollmentTotal(enrollmentNumber);
+                currentCourseComponent.addEnrollmentCap(totalEnrollmentNumber);
                 return;
             }
         }
 
         addNewCourseComponentListElement(componentCode);
-        courseComponentList.get(courseComponentList.size() - 1).addEnrollment(enrollmentNumber);
-        courseComponentList.get(courseComponentList.size() - 1).addEnrollmentTotal(totalEnrollmentNumber);
+//        courseComponentList.get(courseComponentList.size() - 1).addEnrollment(enrollmentNumber);
+//        courseComponentList.get(courseComponentList.size() - 1).addEnrollmentTotal(totalEnrollmentNumber);
+        courseComponentList.get(courseComponentList.size() - 1).addEnrollmentTotal(enrollmentNumber);
+        courseComponentList.get(courseComponentList.size() - 1).addEnrollmentCap(totalEnrollmentNumber);
     }
 
     /**
@@ -201,13 +217,14 @@ public class Offering {
         courseComponentList.sort(new Comparator<CourseComponent>(){
             @Override
             public int compare(CourseComponent component1, CourseComponent component2){
-                return component1.getComponentCode().compareTo(component2.getComponentCode());
+                return component1.getType().compareTo(component2.getType());
             }
         });
     }
 
     @JsonIgnore
     public List<CourseComponent> getCourseComponentList(){
+        sortComponentAlphabetical();
         return courseComponentList;
     }
 }
