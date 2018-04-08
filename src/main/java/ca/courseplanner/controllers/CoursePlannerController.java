@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class CoursePlannerController
 {
     private ModelDumper modelDumper = new ModelDumper("./data/course_data_2018.csv");
+    private List<Watcher> watcherList = new ArrayList<>();
+    private AtomicLong nextWatcherId = new AtomicLong();
 
     @GetMapping("/api/about")
     public About getAbout(){
@@ -217,8 +220,8 @@ public class CoursePlannerController
         return dataPointList;
     }
 
-    @PostMapping("/api/addoffering")//TODO: error check, switch out void if needed
-    public void addNewOffering(@RequestBody Record record){
+    @PostMapping("/api/addoffering")//TODO: error check
+    public CourseComponent addNewOffering(@RequestBody Record record){
         String[] stringArray = {"" + record.getSemester(),
             record.getSubjectName(),
             record.getCatalogNumber(),
@@ -228,5 +231,67 @@ public class CoursePlannerController
             record.getInstructor(),
             record.getComponent()};
         modelDumper.addNewRecord(stringArray);
+
+        //TODO: not sure if this is a hack
+        CourseComponent courseComponent = new CourseComponent(record.getComponent());
+        courseComponent.addEnrollmentTotal(record.getEnrollmentTotal());
+        courseComponent.addEnrollmentCap(record.getEnrollmentCap());
+        return courseComponent;
+    }
+
+    @GetMapping("/api/watchers")
+    public List<Watcher> getChangeWatchers(){
+        return watcherList;
+    }
+
+    @PostMapping("/api/watchers")
+    public Watcher createWatcher(@RequestBody WatcherContents watcherContents){
+        long deptId = watcherContents.getDeptId();
+        long courseId = watcherContents.getCourseId();
+        if(modelDumper.getDepartmentWithID(deptId) != null){
+            System.out.println("the department id exists");
+            Department department = null;
+            for(Department currentDepartment : modelDumper.getDepartmentList()){
+                if(currentDepartment.getDeptId() == deptId){
+                    System.out.println("the department has been set");
+                    department = currentDepartment;
+                }
+            }
+
+            if(department.getCourseWithID(courseId) != null){
+                System.out.println("the course id exists");
+                Course course = null;
+                for(Course currentCourse : department.getCourseList()){
+                    if(currentCourse.getCourseId() == courseId){
+                        System.out.println("the course has been set");
+                        course = currentCourse;
+                    }
+                }
+
+                System.out.println("the watcher is about to be made");
+                Watcher watcher = new Watcher(nextWatcherId.incrementAndGet(), department, course);//TODO: am i doing this observer correctly?
+                watcherList.add(watcher);
+                return watcher;
+            }
+        }
+        //TODO: should return http 201
+        return null;//TODO: make this give an error if it reaches this point
+    }
+
+    @GetMapping("/api/watchers/{watcherId}")
+    public Watcher getEventListOfWatcherId(@PathVariable("watcherId") long watcherId){
+        for(Watcher currentWatcher : watcherList){
+            if(currentWatcher.getId() == watcherId){
+                System.out.println("watcher has been found");
+                return currentWatcher;
+            }
+        }
+        return null;//TODO: return error here if doesnt exist
+    }
+
+    @DeleteMapping("/api/watchers/{watcherId}")
+    public void deleteWatcherWithId(@PathVariable("watcherId") long watcherId){
+        //TODO: should delete the watched with id ... watcherId
+        //TODO: should return http 204
     }
 }

@@ -2,10 +2,7 @@ package ca.courseplanner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -17,6 +14,8 @@ public class Course {
 
     private List<Offering> offeringList = new ArrayList<>();
     private AtomicLong nextOfferingId = new AtomicLong();
+    private List<Watcher> watcherList = new ArrayList<>();
+    private String latestAddition;
 
     /**
      * Constructor for the Course.
@@ -57,6 +56,9 @@ public class Course {
     public void addOfferingInfo(int year, int semester,
                                 String location, String componentCode,
                                 int enrollmentNumber, int totalEnrollmentNumber, List<String> newInstructorList){
+        updateLatestAddition(new Date(), componentCode, enrollmentNumber, totalEnrollmentNumber, semester, year);
+        notifyObservers();
+
         for(Offering currentOffering : offeringList){
             if(currentOffering.isEqual(year, semester, location)){
                 currentOffering.addCourseComponentInfo(componentCode, enrollmentNumber, totalEnrollmentNumber, newInstructorList);
@@ -143,5 +145,50 @@ public class Course {
         }
 
         return null;
+    }
+
+    private void notifyObservers(){
+        for(Watcher currentWatcher : watcherList){
+            currentWatcher.update();
+        }
+    }
+
+    public void addWatcher(Watcher watcher){
+        watcherList.add(watcher);
+    }
+
+    @JsonIgnore
+    public String getLatestAddition(){
+        return latestAddition;
+    }
+
+    //TODO: error check, is this also efficient or not?
+    private void updateLatestAddition(Date date, String componentCode, int enrollmentNumber, int totalEnrollmentNumber, int semester, int year){
+        StringBuilder stringBuilder = new StringBuilder(date.toString() + ": Added section ");
+        stringBuilder.append(componentCode);
+        stringBuilder.append(" with enrollment (");
+        stringBuilder.append(enrollmentNumber);
+        stringBuilder.append(" / ");
+        stringBuilder.append(totalEnrollmentNumber);
+        stringBuilder.append(") to offering ");
+        String semesterString = "";
+        switch(semester){
+            case 1:
+                semesterString = "Spring";
+                break;
+            case 4:
+                semesterString = "Summer";
+                break;
+            case 7:
+                semesterString = "Fall";
+                break;
+            default:
+                assert false;
+        }
+        stringBuilder.append(semesterString);
+        stringBuilder.append(" ");
+        stringBuilder.append(year + 1900);//1900 + yearCode;
+
+        latestAddition = stringBuilder.toString();
     }
 }
