@@ -19,24 +19,27 @@ public class Course {
 
     /**
      * Constructor for the Course.
-     * @param courseId Must not be null. Long containing the id of the course.
+     *
+     * @param courseId      Must not be null. Long containing the id of the course.
      * @param catalogNumber Must not be null. String containing the catalog number of the course.
      */
-    public Course(long courseId, String catalogNumber){
+    public Course(long courseId, String catalogNumber) {
         this.courseId = courseId;
         this.catalogNumber = catalogNumber;
     }
 
     /**
      * Gets the course Id of the course.
+     *
      * @return Long containing the ID of the course.
      */
-    public long getCourseId(){
+    public long getCourseId() {
         return courseId;
     }
 
     /**
      * Gets the CatalogNumber of the Course.
+     *
      * @return String containing the CatalogNumber of the Course.
      */
     public String getCatalogNumber() {
@@ -45,22 +48,23 @@ public class Course {
 
     /**
      * Adds Offering information about the course
-     * @param year Must not be null. Integer containing the year code the Course is offered.
-     * @param semester Must not be null. Integer containing the semester code the Course is offered.
-     * @param location Must not be null. String containing the location the Course is offered.
-     * @param componentCode Must not be null. String containing the componentCode the Course is offered.
-     * @param enrollmentNumber Must not be null. Integer containing the amount of enrolled students in the offered Course.
+     *
+     * @param year                  Must not be null. Integer containing the year code the Course is offered.
+     * @param semester              Must not be null. Integer containing the semester code the Course is offered.
+     * @param location              Must not be null. String containing the location the Course is offered.
+     * @param componentCode         Must not be null. String containing the componentCode the Course is offered.
+     * @param enrollmentNumber      Must not be null. Integer containing the amount of enrolled students in the offered Course.
      * @param totalEnrollmentNumber Must not be null. Integer containing the amount of total seats in the offered Course.
-     * @param newInstructorList Must not be null. ArrayList containing the instructor's names in the offered Course.
+     * @param newInstructorList     Must not be null. ArrayList containing the instructor's names in the offered Course.
      */
     public void addOfferingInfo(int year, int semester,
                                 String location, String componentCode,
-                                int enrollmentNumber, int totalEnrollmentNumber, List<String> newInstructorList){
+                                int enrollmentNumber, int totalEnrollmentNumber, List<String> newInstructorList) {
         updateLatestAddition(new Date(), componentCode, enrollmentNumber, totalEnrollmentNumber, semester, year);
         notifyObservers();
 
-        for(Offering currentOffering : offeringList){
-            if(currentOffering.isEqual(year, semester, location)){
+        for (Offering currentOffering : offeringList) {
+            if (currentOffering.isEqual(year, semester, location)) {
                 currentOffering.addCourseComponentInfo(componentCode, enrollmentNumber, totalEnrollmentNumber, newInstructorList);
                 return;
             }
@@ -72,14 +76,15 @@ public class Course {
 
     /**
      * Gets the information about the Course.
+     *
      * @return Returns a String containing the information about the Course.
      */
     @JsonIgnore
-    public String getCourseInfo(){
+    public String getCourseInfo() {
         sortLocationAlphabetical();
         sortNumericalYearSem();
         StringBuilder stringBuilder = new StringBuilder(catalogNumber + "\n");
-        for(Offering currentOffering : offeringList){
+        for (Offering currentOffering : offeringList) {
             stringBuilder.append(currentOffering.getOfferingInfo());
         }
         return stringBuilder.toString();
@@ -87,31 +92,33 @@ public class Course {
 
     /**
      * Checks if the current information matches the Course's information.
+     *
      * @param catalogNumber Must not be null. String containing the catalogNumber.
      * @return Boolean to see if the current information matches the Course's information.
      */
     @JsonIgnore
-    public boolean isEqual(String catalogNumber){
+    public boolean isEqual(String catalogNumber) {
         return catalogNumber.equals(this.catalogNumber);
     }
 
     /**
      * Adds a new Offering into the ArrayList.
-     * @param year Must not be null. Int containing the year code of the course.
+     *
+     * @param year     Must not be null. Int containing the year code of the course.
      * @param semester Must not be null. Int containing the semester code of the course.
      * @param location Must not be null. String containing the location of the course.
      */
-    private void addNewOfferingListElement(int year, int semester, String location){
+    private void addNewOfferingListElement(int year, int semester, String location) {
         offeringList.add(new Offering(nextOfferingId.incrementAndGet(), location, year, semester));
     }
 
     /**
      * Sorts the offering list in an ascending order using the offeringID given by SFU.
      */
-    private void sortNumericalYearSem(){
+    private void sortNumericalYearSem() {
         offeringList.sort(new Comparator<Offering>() {
             @Override
-            public int compare(Offering o1, Offering o2){
+            public int compare(Offering o1, Offering o2) {
                 return o1.getOfferingId().compareTo(o2.getOfferingId());
             }
         });
@@ -120,7 +127,7 @@ public class Course {
     /**
      * Sorts the offering list in ascending order using the location of the course.
      */
-    private void sortLocationAlphabetical(){
+    private void sortLocationAlphabetical() {
         offeringList.sort(new Comparator<Offering>() {
             @Override
             public int compare(Offering o1, Offering o2) {
@@ -130,16 +137,16 @@ public class Course {
     }
 
     @JsonIgnore
-    public List<Offering> getOfferingList(){
+    public List<Offering> getOfferingList() {
         sortLocationAlphabetical();
         sortNumericalYearSem();
         return offeringList;
     }
 
     @JsonIgnore
-    public Offering getOfferingWithID(long offeringId){
-        for(Offering currentOffering : offeringList){
-            if(currentOffering.getCourseOfferingId() == offeringId){
+    public Offering getOfferingWithID(long offeringId) {
+        for (Offering currentOffering : offeringList) {
+            if (currentOffering.getCourseOfferingId() == offeringId) {
                 return currentOffering;
             }
         }
@@ -147,23 +154,22 @@ public class Course {
         return null;
     }
 
-    private void notifyObservers(){
-        for(Watcher currentWatcher : watcherList){
+    private void notifyObservers() {
+        for (Watcher currentWatcher : watcherList) {
             currentWatcher.update();
         }
     }
 
-    public void addWatcher(Watcher watcher){
+    public void addWatcher(Watcher watcher) {
         watcherList.add(watcher);
     }
 
     @JsonIgnore
-    public String getLatestAddition(){
+    public String getLatestAddition() {
         return latestAddition;
     }
 
-    //TODO: error check, is this also efficient or not?
-    private void updateLatestAddition(Date date, String componentCode, int enrollmentNumber, int totalEnrollmentNumber, int semester, int year){
+    private void updateLatestAddition(Date date, String componentCode, int enrollmentNumber, int totalEnrollmentNumber, int semester, int year) {
         StringBuilder stringBuilder = new StringBuilder(date.toString() + ": Added section ");
         stringBuilder.append(componentCode);
         stringBuilder.append(" with enrollment (");
@@ -172,7 +178,7 @@ public class Course {
         stringBuilder.append(totalEnrollmentNumber);
         stringBuilder.append(") to offering ");
         String semesterString = "";
-        switch(semester){
+        switch (semester) {
             case 1:
                 semesterString = "Spring";
                 break;

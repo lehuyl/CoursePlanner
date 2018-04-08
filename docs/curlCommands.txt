@@ -6,8 +6,87 @@ curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departm
 
 curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/2/courses/20/offerings/7
 
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/99999/courses
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/2/courses/99999/offerings
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/9999/courses/103/offerings
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/99999/courses/103/offerings/7063
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/2/courses/9999999/offerings/7063
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/2/courses/20/offerings/99999
+
+curl -i -s -H 'Content-Type: application/json' -X GET 'localhost:8080/api/stats/students-per-semester?deptId=2'
+
+curl -i -s -H 'Content-Type: application/json' -X GET 'localhost:8080/api/stats/students-per-semester?deptId=9999'
+
+curl -i -s -H 'Content-Type: application/json' -X POST -d '{
+        "semester": 1191,
+        "subjectName": "CMPT",
+        "catalogNumber": 213,
+        "location": "SURREY",
+        "enrollmentCap": 90,
+        "component": "LEC",
+        "enrollmentTotal": 89,
+        "instructor": "Brian Fraser"
+    }' localhost:8080/api/addoffering
+
+curl -i -s -H 'Content-Type: application/json' -X POST -d '{
+        "semester": 1181,
+        "subjectName": "CMPT",
+        "catalogNumber": 300,
+        "location": "SURREY",
+        "enrollmentCap": 101,
+        "component": "TUT",
+        "enrollmentTotal": 100,
+        "instructor": "Dr. Evil"
+    }' localhost:8080/api/addoffering
+
+curl -i -s -H 'Content-Type: application/json' -X POST -d '{
+        "semester": 1191,
+        "subjectName": "CMPT",
+        "catalogNumber": 911,
+        "location": "SURREY",
+        "enrollmentCap": 10,
+        "component": "TUT",
+        "enrollmentTotal": 6,
+        "instructor": "Dr. Alice"
+    }' localhost:8080/api/addoffering
+
+curl -i -s -H 'Content-Type: application/json' -X POST -d '{
+        "semester": 1191,
+        "subjectName": "ABCD",
+        "catalogNumber": 101,
+        "location": "Vancouver",
+        "enrollmentCap": 123,
+        "component": "LEC",
+        "enrollmentTotal": 110,
+        "instructor": "Mystery Instructor"
+    }' localhost:8080/api/addoffering
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/watchers
 
 curl -i -s -H 'Content-Type: application/json' -X POST -d '{
         "deptId": 2,
         "courseId": 20
     }' localhost:8080/api/watchers
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/watchers/1
+
+curl -i -X DELETE localhost:8080/api/watchers/1
+
+curl -i -s -H 'Content-Type: application/json' -X POST -d '{
+        "deptId": 999999,
+        "courseId": 103
+    }' localhost:8080/api/watchers
+
+curl -i -s -H 'Content-Type: application/json' -X POST -d '{
+        "deptId": 2,
+        "courseId": 99999
+    }' localhost:8080/api/watchers
+
+curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/watchers/999999
+
+curl -i -X DELETE localhost:8080/api/watchers/9999999

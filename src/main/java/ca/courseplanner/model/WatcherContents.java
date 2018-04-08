@@ -1,11 +1,14 @@
 package ca.courseplanner.model;
 
-//TODO: make javadocs
+/**
+ * WatcherContents has the information for which to make a watcher for.
+ */
 public class WatcherContents {
     private long deptId;
     private long courseId;
 
-    public WatcherContents(){}
+    public WatcherContents() {
+    }
 
 
     public long getDeptId() {

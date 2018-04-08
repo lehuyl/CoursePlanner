@@ -13,18 +13,9 @@ public class Record {
     private int enrollmentTotal;
     private String instructor;
 
-    //TODO: error check if creating constructor properly
     public Record(){
 
     }
-
-//    public int getYearCode(){
-//        return semester/10;
-//    }
-//
-//    public int getSemesterCode(){
-//        return semester - getYearCode();
-//    }
 
     public int getSemester(){
         return semester;
