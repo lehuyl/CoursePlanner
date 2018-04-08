@@ -5,3 +5,9 @@ curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departm
 curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/2/courses/20/offerings
 
 curl -i -s -H 'Content-Type: application/json' -X GET localhost:8080/api/departments/2/courses/20/offerings/7
+
+
+curl -i -s -H 'Content-Type: application/json' -X POST -d '{
+        "deptId": 2,
+        "courseId": 20
+    }' localhost:8080/api/watchers
