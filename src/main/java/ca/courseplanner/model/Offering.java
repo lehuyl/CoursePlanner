@@ -30,7 +30,7 @@ public class Offering {
         this.courseOfferingId = courseOfferingId;
         this.location = location;
         this.yearCode = yearCode;
-        this.year = yearCode;//TODO: there is a formula for this
+        this.year = getYear(yearCode);//TODO: there is a formula for this//I think this was the formula but i cant find to check
         this.semesterCode = semesterCode;
 
         switch (semesterCode){
@@ -46,6 +46,11 @@ public class Offering {
             default:
                 assert false;
         }
+    }
+
+    private int getYear(int yearCode)
+    {
+        return 1900 + yearCode;
     }
 
     /**

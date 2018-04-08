@@ -70,7 +70,6 @@ public class ModelDumper {
                 return;
             }
         }
-
         addNewDepartmentListElement(subject);
         departmentList.get(departmentList.size() - 1).addCourseInfo(catalogNumber, year, semester, location, componentCode, enrollmentNumber, totalEnrollmentNumber, newInstructorList);
     }
@@ -102,7 +101,7 @@ public class ModelDumper {
      * @param name Must not be null. String containing the name of the new department.
      */
     private void addNewDepartmentListElement(String name){
-        departmentList.add(new Department(nextDepartmentId.incrementAndGet(), name));
+        departmentList.add(new Department(nextDepartmentId.getAndIncrement(), name));
     }
 
     /**
