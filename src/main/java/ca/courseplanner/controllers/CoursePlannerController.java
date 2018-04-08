@@ -1,13 +1,11 @@
 package ca.courseplanner.controllers;
 
 import ca.courseplanner.model.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -220,6 +218,7 @@ public class CoursePlannerController
         return dataPointList;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/addoffering")//TODO: error check
     public CourseComponent addNewOffering(@RequestBody Record record){
         String[] stringArray = {"" + record.getSemester(),
@@ -244,6 +243,7 @@ public class CoursePlannerController
         return watcherList;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/watchers")
     public Watcher createWatcher(@RequestBody WatcherContents watcherContents){
         long deptId = watcherContents.getDeptId();
@@ -273,9 +273,14 @@ public class CoursePlannerController
                 watcherList.add(watcher);
                 return watcher;
             }
+            else
+            {
+                throw new IllegalArgumentException("Course of ID " + courseId + " not found.");
+            }
         }
         //TODO: should return http 201
-        return null;//TODO: make this give an error if it reaches this point
+        throw new IllegalArgumentException("Department of ID " + deptId + " not found.");
+//        return null;//TODO: make this give an error if it reaches this point
     }
 
     @GetMapping("/api/watchers/{watcherId}")
@@ -286,12 +291,27 @@ public class CoursePlannerController
                 return currentWatcher;
             }
         }
-        return null;//TODO: return error here if doesnt exist
+        throw new IllegalArgumentException("Watcher of ID " + watcherId + " not found.");
+//        return null;//TODO: return error here if doesnt exist
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT )
     @DeleteMapping("/api/watchers/{watcherId}")
     public void deleteWatcherWithId(@PathVariable("watcherId") long watcherId){
         //TODO: should delete the watched with id ... watcherId
         //TODO: should return http 204
+
+        for(ListIterator<Watcher> iterator = watcherList.listIterator(); iterator.hasNext();)
+        {
+            Watcher watcher = iterator.next();
+            if(watcher.getId() == watcherId)
+            {
+               iterator.remove();
+               return;
+            }
+        }
+
+        throw new IllegalArgumentException("Watcher with ID " + watcherId + " not found.");
+
     }
 }
