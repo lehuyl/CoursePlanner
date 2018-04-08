@@ -161,61 +161,81 @@ public class CoursePlannerController
             //else keep going as if nothing happened
 
             //go inside the offering for its componentList and add that into the specific dataPoint
-        List<DataPoint> dataPointList = new ArrayList<>();
-        System.out.println("the department name is " + modelDumper.getDepartmentWithID(deptId).getName());
-        for(Course currentCourse : modelDumper.getDepartmentWithID(deptId).getCourseList()){
-            System.out.println("the course name is " + modelDumper.getDepartmentWithID(deptId).getName() + " " + currentCourse.getCatalogNumber());
-            System.out.println("about to get every offering in this course...");
-            for(Offering currentOffering : currentCourse.getOfferingList()){
+        if(modelDumper.getDepartmentWithID(deptId) == null)
+        {
+            throw new IllegalArgumentException("Department of ID " + deptId + " not found.");
+        }
+        else
+        {
+            List<DataPoint> dataPointList = new ArrayList<>();
+            System.out.println("the department name is " + modelDumper.getDepartmentWithID(deptId).getName());
+            for (Course currentCourse : modelDumper.getDepartmentWithID(deptId).getCourseList())
+            {
+                System.out.println("the course name is " + modelDumper.getDepartmentWithID(deptId).getName() + " " + currentCourse.getCatalogNumber());
+                System.out.println("about to get every offering in this course...");
+                for (Offering currentOffering : currentCourse.getOfferingList())
+                {
 
-                boolean semesterCodeAlreadyExists = false;
-                for(DataPoint currentDataPoint : dataPointList){
-                    System.out.println("Existence: data point semester code: " + currentDataPoint.getSemesterCode() + " | offering semester code: " + currentOffering.getSemesterCode());
-                    if(currentDataPoint.getSemesterCode() == currentOffering.getSemesterCode()){
-                        semesterCodeAlreadyExists = true;
-                        System.out.println("found that the appropriate semester code exists, move on... ");
-                        break;
-                    }
-                }
-
-                if(!semesterCodeAlreadyExists){
-                    System.out.println("semester code does not exist yet, adding a new data point into list... ");
-                    dataPointList.add(new DataPoint(currentOffering.getSemesterCode()));
-                }
-
-                DataPoint appropriateDataPoint = null;
-                System.out.println("find datapoint and keep track...");
-                for(DataPoint currentDataPoint : dataPointList){
-                    System.out.println("Keep: data point semester code: " + currentDataPoint.getSemesterCode() + " | offering semester code: " + currentOffering.getSemesterCode());
-                    if(currentDataPoint.getSemesterCode() == currentOffering.getSemesterCode()){
-                        System.out.println("found the data point, will keep track of it now... ");
-                        appropriateDataPoint = currentDataPoint;
-                        break;
-                    }
-                }
-
-                if(appropriateDataPoint == null){
-                    System.out.println("the appropriate datapoint is still null");
-                }
-                else{
-                    for(CourseComponent currentCourseComponent : currentOffering.getCourseComponentList()){
-                        if(currentCourseComponent.getType().equals("LEC")){
-                            appropriateDataPoint.addToTotalCoursesTaken(currentCourseComponent.getEnrollmentTotal());
-                            System.out.println("appropriate data sem code: " + appropriateDataPoint.getSemesterCode() + " | adding " + currentCourseComponent.getEnrollmentTotal() + " amount");
+                    boolean semesterCodeAlreadyExists = false;
+                    for (DataPoint currentDataPoint : dataPointList)
+                    {
+                        System.out.println("Existence: data point semester code: " + currentDataPoint.getSemesterCode() + " | offering semester code: " + currentOffering.getSemesterCode());
+                        if (currentDataPoint.getSemesterCode() == currentOffering.getSemesterCode())
+                        {
+                            semesterCodeAlreadyExists = true;
+                            System.out.println("found that the appropriate semester code exists, move on... ");
+                            break;
                         }
                     }
-                }
-                System.out.println("finished looking through all this offering");
-            }
-        }
 
-        dataPointList.sort(new Comparator<DataPoint>() {
-            @Override
-            public int compare(DataPoint o1, DataPoint o2) {
-                return o1.getSemesterCode() - o2.getSemesterCode();
+                    if (!semesterCodeAlreadyExists)
+                    {
+                        System.out.println("semester code does not exist yet, adding a new data point into list... ");
+                        dataPointList.add(new DataPoint(currentOffering.getSemesterCode()));
+                    }
+
+                    DataPoint appropriateDataPoint = null;
+                    System.out.println("find datapoint and keep track...");
+                    for (DataPoint currentDataPoint : dataPointList)
+                    {
+                        System.out.println("Keep: data point semester code: " + currentDataPoint.getSemesterCode() + " | offering semester code: " + currentOffering.getSemesterCode());
+                        if (currentDataPoint.getSemesterCode() == currentOffering.getSemesterCode())
+                        {
+                            System.out.println("found the data point, will keep track of it now... ");
+                            appropriateDataPoint = currentDataPoint;
+                            break;
+                        }
+                    }
+
+                    if (appropriateDataPoint == null)
+                    {
+                        System.out.println("the appropriate datapoint is still null");
+                    }
+                    else
+                    {
+                        for (CourseComponent currentCourseComponent : currentOffering.getCourseComponentList())
+                        {
+                            if (currentCourseComponent.getType().equals("LEC"))
+                            {
+                                appropriateDataPoint.addToTotalCoursesTaken(currentCourseComponent.getEnrollmentTotal());
+                                System.out.println("appropriate data sem code: " + appropriateDataPoint.getSemesterCode() + " | adding " + currentCourseComponent.getEnrollmentTotal() + " amount");
+                            }
+                        }
+                    }
+                    System.out.println("finished looking through all this offering");
+                }
             }
-        });
-        return dataPointList;
+
+            dataPointList.sort(new Comparator<DataPoint>()
+            {
+                @Override
+                public int compare(DataPoint o1, DataPoint o2)
+                {
+                    return o1.getSemesterCode() - o2.getSemesterCode();
+                }
+            });
+            return dataPointList;
+        }
     }
 
     @ResponseStatus(HttpStatus.CREATED)
