@@ -1,5 +1,8 @@
 package ca.courseplanner.model;
 
+/**
+ * DataPoint object used for the graph for the UI.
+ */
 public class DataPoint {
     private int semesterCode;
     private int totalCoursesTaken;

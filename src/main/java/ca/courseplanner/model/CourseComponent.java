@@ -12,78 +12,66 @@ public class CourseComponent {
 
     /**
      * Constructor for the CourseComponent
+     *
      * @param componentCode Must not be null. String that contains the componentCode.
      */
-    public CourseComponent(String componentCode){
+    public CourseComponent(String componentCode) {
         this.type = componentCode;
     }
 
     /**
      * Returns the componentCode of the CourseComponent.
+     *
      * @return String containing the componentCode of the CourseComponent.
      */
-    public String getType(){
+    public String getType() {
         return type;
     }
 
     /**
      * Gets the enrollment cap of the component.
+     *
      * @return Integer containing the enrollment cap of the component.
      */
-    public int getEnrollmentCap(){
+    public int getEnrollmentCap() {
         return enrollmentCap;
     }
 
     /**
      * Gets the enrollment total of the component.
+     *
      * @return Integer containing the enrollment cap of the component.
      */
-    public int getEnrollmentTotal(){
+    public int getEnrollmentTotal() {
         return enrollmentTotal;
     }
 
-//    /**
-//     * Updates the amount of people enrolled in the CourseComponent.
-//     * @param enrollmentAmount Must not be null. Int containing how many people to be updated into the enrollment number.
-//     */
-//    public void addEnrollment(int enrollmentAmount){
-////        enrollmentCap += enrollmentAmount;
-//        enrollmentTotal += enrollmentAmount;
-//    }
-
-    public void addEnrollmentTotal(int enrollmentTotal){
+    public void addEnrollmentTotal(int enrollmentTotal) {
         this.enrollmentTotal += enrollmentTotal;
     }
 
-//    /**
-//     * Updates the amount of seats available in the CourseComponent.
-//     * @param seats Must not be null. Int containing how many seats to be updated into the total enrollment number.
-//     */
-//    public void addEnrollmentTotal(int seats){
-////        enrollmentTotal += seats;
-//        enrollmentCap += seats;
-//    }
-
-    public void addEnrollmentCap(int enrollmentCap){
+    public void addEnrollmentCap(int enrollmentCap) {
         this.enrollmentCap += enrollmentCap;
     }
 
     /**
      * Checks if the CourseComponent is equal to the String in question.
+     *
      * @param componentCode Must not be null. String contains the component code in question.
      * @return Boolean showing if the CourseComponent is equal to the String in question.
      */
     @JsonIgnore
-    public boolean isEqual(String componentCode){
+    public boolean isEqual(String componentCode) {
         return this.type.equals(componentCode);
     }
 
     /**
      * Returns the information about the courseComponent.
+     *
      * @return String containing the information about the CourseComponent.
      */
     @JsonIgnore
-    public String getCourseComponentInfo(){
+    public String getCourseComponentInfo() {
         return "Type=" + type + ", Enrollment=" + enrollmentCap + "/" + enrollmentTotal + "\n";
     }
 }

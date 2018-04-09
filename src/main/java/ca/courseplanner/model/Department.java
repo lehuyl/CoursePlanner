@@ -19,46 +19,50 @@ public class Department {
 
     /**
      * Contructor for the Department object.
+     *
      * @param deptId Must not be null. Long containing the id of the department.
-     * @param name Must not be null. String containing the name of the department.
+     * @param name   Must not be null. String containing the name of the department.
      */
-    public Department(long deptId, String name){
+    public Department(long deptId, String name) {
         this.deptId = deptId;
         this.name = name;
     }
 
     /**
      * Get the id of the department.
+     *
      * @return Integer containing the id of the department.
      */
-    public long getDeptId(){
+    public long getDeptId() {
         return deptId;
     }
 
     /**
      * Get the name of the department.
+     *
      * @return String containing the name of the department.
      */
-    public String getName(){
+    public String getName() {
         return name;
     }
 
     /**
      * Adds a new course into its department.
-     * @param catalogNumber Must not be null. String containing the catalog number of the course.
-     * @param year Must not be null. Integer containing the year code of the course.
-     * @param semester Must not be null. Integer containing the semester code of the course.
-     * @param location Must not be null. String containing the location of the course.
-     * @param componentCode Must not be null. String containing the component code of the course.
-     * @param enrollmentNumber Must not be null. Integer containing number of students enrolled in the course.
+     *
+     * @param catalogNumber         Must not be null. String containing the catalog number of the course.
+     * @param year                  Must not be null. Integer containing the year code of the course.
+     * @param semester              Must not be null. Integer containing the semester code of the course.
+     * @param location              Must not be null. String containing the location of the course.
+     * @param componentCode         Must not be null. String containing the component code of the course.
+     * @param enrollmentNumber      Must not be null. Integer containing number of students enrolled in the course.
      * @param totalEnrollmentNumber Must not be null. Integer containing the number of seats in the course.
-     * @param newInstructorList Must not be null. List of Strings containing the instructors in the course.
+     * @param newInstructorList     Must not be null. List of Strings containing the instructors in the course.
      */
     public void addCourseInfo(String catalogNumber, int year, int semester,
                               String location, String componentCode,
-                              int enrollmentNumber, int totalEnrollmentNumber, List<String> newInstructorList){
-        for(Course currentCourse : courseList){
-            if(currentCourse.isEqual(catalogNumber)){
+                              int enrollmentNumber, int totalEnrollmentNumber, List<String> newInstructorList) {
+        for (Course currentCourse : courseList) {
+            if (currentCourse.isEqual(catalogNumber)) {
                 currentCourse.addOfferingInfo(year, semester, location, componentCode, enrollmentNumber, totalEnrollmentNumber, newInstructorList);
                 return;
             }
@@ -72,14 +76,15 @@ public class Department {
 
     /**
      * Gets all the information about the department.
+     *
      * @return String containing all the information about the department.
      */
     @JsonIgnore
-    public String getDepartmentInfo(){
+    public String getDepartmentInfo() {
         StringBuilder stringBuilder = new StringBuilder();
 
         sortCoursesAscending();
-        for(Course currentCourse : courseList){
+        for (Course currentCourse : courseList) {
             stringBuilder.append(name);
             stringBuilder.append(" ");
             stringBuilder.append(currentCourse.getCourseInfo());
@@ -89,26 +94,28 @@ public class Department {
 
     /**
      * Checks if the current information is the same as the object.
+     *
      * @param name Must not be null. String containing the name of the department.
      * @return Boolean showing if the current information is the same as the object.
      */
     @JsonIgnore
-    public boolean isEqual(String name){
+    public boolean isEqual(String name) {
         return this.name.equals(name);
     }
 
     /**
      * Adds a new Course into the Course List.
+     *
      * @param catalogNumber Must not be null. String containing the catalog number of the course.
      */
-    private void addNewCourseListElement(String catalogNumber){
+    private void addNewCourseListElement(String catalogNumber) {
         courseList.add(new Course(nextCourseId.incrementAndGet(), catalogNumber));
     }
 
     /**
      * Sorts the course list in ascending order according to the catalog number.
      */
-    private void sortCoursesAscending(){
+    private void sortCoursesAscending() {
         courseList.sort(new Comparator<Course>() {
             @Override
             public int compare(Course o1, Course o2) {
@@ -118,15 +125,15 @@ public class Department {
     }
 
     @JsonIgnore
-    public List<Course> getCourseList(){
+    public List<Course> getCourseList() {
         sortCoursesAscending();
         return courseList;
     }
 
     @JsonIgnore
-    public Course getCourseWithID(long courseId){
-        for(Course currentCourse : courseList){
-            if(currentCourse.getCourseId() == courseId){
+    public Course getCourseWithID(long courseId) {
+        for (Course currentCourse : courseList) {
+            if (currentCourse.getCourseId() == courseId) {
                 return currentCourse;
             }
         }

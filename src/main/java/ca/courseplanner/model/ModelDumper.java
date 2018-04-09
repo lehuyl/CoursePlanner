@@ -17,19 +17,15 @@ public class ModelDumper {
     /**
      * ModelDumper constructor.
      */
-    public ModelDumper(String filename){
-        File file = new File(filename);//TODO: change later to 2018 upon submission
-        try(Scanner scanner = new Scanner(file)){
+    public ModelDumper(String filename) {
+        File file = new File(filename);
+        try (Scanner scanner = new Scanner(file)) {
 
             int lineNumber = 1;
-            while(scanner.hasNextLine())
-            {
-                if(lineNumber == 1)
-                {
+            while (scanner.hasNextLine()) {
+                if (lineNumber == 1) {
                     scanner.nextLine();
-                }
-                else
-                {
+                } else {
                     String[] newLine = scanner.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
                     addNewRecord(newLine);
@@ -37,24 +33,27 @@ public class ModelDumper {
                 lineNumber++;
             }
 
-        }catch(Exception e){
-            System.out.println("something bad happened");//TODO: fix this later
+        } catch (Exception e) {
+            System.out.println("something bad happened with scanning the file");
         }
     }
 
     /**
      * Gets the department list.
+     *
      * @return List of Department objects.
      */
-    public List<Department> getDepartmentList(){
+    public List<Department> getDepartmentList() {
+        sortDepartmentsAlphabetical();
         return departmentList;
     }
 
     /**
      * Adds a new record into the system.
+     *
      * @param record Must not be null. String array containing the information of the new course.
      */
-    public void addNewRecord(String[] record){//TODO: clean up later
+    public void addNewRecord(String[] record) {
         int year;
         int semester;
         String subject;
@@ -65,28 +64,26 @@ public class ModelDumper {
         int totalEnrollmentNumber;
         List<String> newInstructorList;
 
-        //get the first element of the record, use the first three char for the year, turn that to int, last one is for semester, turn that to int
+        //Takes the String array and puts it into the appropriate
         year = Integer.parseInt(record[0].substring(0, 3));
         semester = Integer.parseInt(record[0].substring(3));
 
-        //get the second element, use that for subject
         subject = record[1].trim();
         catalogNumber = record[2].trim();
         location = record[3].trim();
         totalEnrollmentNumber = Integer.parseInt(record[4]);
         enrollmentNumber = Integer.parseInt(record[5]);
 
-        //for record[6] we will have to make sure that we separate these into comma separated then add those into the newInstructorList
         record[6] = record[6].replace("\"", "");
         record[6] = record[6].replace(", ", ",");
         newInstructorList = Arrays.asList(record[6].split(","));
-        for(int i = 0; i < newInstructorList.size(); i++){
+        for (int i = 0; i < newInstructorList.size(); i++) {
             newInstructorList.set(i, newInstructorList.get(i).trim());
         }
         componentCode = record[7];
 
-        for(Department currentDepartment :  departmentList){
-            if(currentDepartment.isEqual(subject)){
+        for (Department currentDepartment : departmentList) {
+            if (currentDepartment.isEqual(subject)) {
                 currentDepartment.addCourseInfo(catalogNumber, year, semester, location, componentCode, enrollmentNumber, totalEnrollmentNumber, newInstructorList);
                 return;
             }
@@ -98,16 +95,17 @@ public class ModelDumper {
     /**
      * Prints the model onto the console and also makes a text file with idential information.
      */
-    public void dumpToConsole(){
+    public void dumpToConsole() {
 
         File logFile = new File("./data/output_dump.txt");
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(logFile))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFile))) {
 
-            writer.write("Model Dump from 'course_data_2018.csv' file\n\n");//TODO: this is currently hardcoded
-            System.out.print("Model Dump from 'course_data_2018.csv' file\n\n");
+            String intro = "Model Dump from 'course_data_2018.csv' file\n\n";
+            writer.write(intro);
+            System.out.print(intro);
 
             sortDepartmentsAlphabetical();
-            for(Department currentDepartment : departmentList){
+            for (Department currentDepartment : departmentList) {
                 System.out.print(currentDepartment.getDepartmentInfo());
                 writer.write(currentDepartment.getDepartmentInfo());
             }
@@ -119,16 +117,17 @@ public class ModelDumper {
 
     /**
      * Adds a new department list element into the department list.
+     *
      * @param name Must not be null. String containing the name of the new department.
      */
-    private void addNewDepartmentListElement(String name){
+    private void addNewDepartmentListElement(String name) {
         departmentList.add(new Department(nextDepartmentId.getAndIncrement(), name));
     }
 
     /**
      * Sorts the department objects into alphabetical ascending.
      */
-    private void sortDepartmentsAlphabetical(){
+    private void sortDepartmentsAlphabetical() {
         departmentList.sort(new Comparator<Department>() {
             @Override
             public int compare(Department o1, Department o2) {
@@ -137,9 +136,9 @@ public class ModelDumper {
         });
     }
 
-    public Department getDepartmentWithID(long deptId){
-        for(Department currentDepartment : departmentList){
-            if(currentDepartment.getDeptId() == deptId){
+    public Department getDepartmentWithID(long deptId) {
+        for (Department currentDepartment : departmentList) {
+            if (currentDepartment.getDeptId() == deptId) {
                 return currentDepartment;
             }
         }
